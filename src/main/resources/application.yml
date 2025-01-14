@@ -1,1 +1,27 @@
-spring.application.name=seller-api
+
+# Spring Boot configuration
+spring:
+  application:
+    name: Seller API
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_seller
+    password: admin
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update # When you launch the application for the first time - switch "none" at "create"
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+server:
+  port: 8080 #set your port
+
+  # Springdoc OpenApi 3.1 & Swagger 3
+springdoc:
+  swagger-ui:
+    path: /docs-seller-api.html
+  api-docs:
+    path: /docs-seller-api
+  packagesToScan: com.masprogtech.controllers
