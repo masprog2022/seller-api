@@ -34,8 +34,6 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/db_seller
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: admin
-
-      - name: Build the application
         run: |
           mvn clean
           mvn -B package --file pom.xml
