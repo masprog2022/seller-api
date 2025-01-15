@@ -25,7 +25,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @Operation(summary = "Listar todas categorias", description = "Listar todas Categorias",
+    @Operation(summary = "Listar toda categoria", description = "Listar todas Categorias",
 
             responses = {
                     @ApiResponse(responseCode = "200", description = "Todos categorias listados com sucesso",
