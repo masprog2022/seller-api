@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,5 +34,29 @@ public class CategoryController {
     @GetMapping("/all")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategory());
+    }
+
+    @Operation(summary = "Registrar categoria", description = "Registrar categoria",
+
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "categoria registada com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class)))
+            })
+    @PostMapping("/register")
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO){
+        CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
+        return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Deletar categoria", description = "Registrar categoria",
+
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "categoria deletada com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class)))
+            })
+    @DeleteMapping("/categories/{categoryId}")
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId){
+        CategoryDTO deletedCategory = categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<>(deletedCategory, HttpStatus.OK);
     }
 }
