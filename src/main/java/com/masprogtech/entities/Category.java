@@ -18,9 +18,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 5, message = "Category name must contain at least 5 characters")
     private String name;
+
+    private String description;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -35,9 +35,9 @@ public class Category {
     public Category() {
     }
 
-    public Category(Long id, String name) {
-        this.id = id;
+    public Category(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     public Long getId() {
@@ -48,12 +48,20 @@ public class Category {
         this.id = id;
     }
 
-    public @NotBlank @Size(min = 5, message = "Category name must contain at least 5 characters") String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotBlank @Size(min = 5, message = "Category name must contain at least 5 characters") String name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -83,6 +91,4 @@ public class Category {
     protected void preUpdate(){
         this.updateAt = LocalDateTime.now();
     }
-
-
 }
