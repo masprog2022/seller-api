@@ -15,9 +15,9 @@ public class SpringDocOpenApiConfig {
     public OpenAPI openAPI(){
         return new OpenAPI()
                 .info(new Info()
-                        .title("API - SELLER")
+                        .title("API - Ice Market")
                         .version("v1")
-                        .description("API para testar github actions ci/cd pipeline")
+                        .description("API para vendas de gelo, vai ser consumida por um app")
                         .termsOfService("https://about-mauro.netlify.app/")
                         .license(
                                 new License()
