@@ -23,7 +23,7 @@ public class Category {
 
     private String description;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Product> products;
 
     @CreatedDate
@@ -84,15 +84,21 @@ public class Category {
         this.updateAt = updateAt;
     }
 
-    @PrePersist
-    protected void prePersist(){
-        if(this.createdAt == null)
-            createdAt = LocalDateTime.now();
-        if(this.updateAt == null)
-            updateAt = LocalDateTime.now();
+    public List<Product> getProducts() {
+        return products;
     }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     @PreUpdate
-    protected void preUpdate(){
+    public void preUpdate() {
         this.updateAt = LocalDateTime.now();
     }
 }
