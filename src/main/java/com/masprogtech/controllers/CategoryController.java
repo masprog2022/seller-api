@@ -54,7 +54,7 @@ public class CategoryController {
                     @ApiResponse(responseCode = "200", description = "categoria deletada com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class)))
             })
-    @DeleteMapping("/categories/{categoryId}")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId){
         CategoryDTO deletedCategory = categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(deletedCategory, HttpStatus.OK);
