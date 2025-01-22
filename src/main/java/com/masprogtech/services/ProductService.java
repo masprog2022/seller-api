@@ -1,4 +1,7 @@
 package com.masprogtech.services;
 
-public class ProductService {
+import com.masprogtech.dtos.ProductDTO;
+
+public interface ProductService {
+    ProductDTO addProduct(Long categoryId, ProductDTO productDto);
 }
