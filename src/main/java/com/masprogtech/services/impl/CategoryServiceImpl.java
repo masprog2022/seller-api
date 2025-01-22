@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,4 +69,17 @@ public class CategoryServiceImpl implements CategoryService {
 
         return modelMapper.map(category, CategoryDTO.class);
     }
+
+    @Override
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId) {
+        Category savedCtegory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
+        Category category = modelMapper.map(categoryDTO, Category.class);
+        category.setId(categoryId);
+        category.setUpdateAt(LocalDateTime.now());
+        savedCtegory = categoryRepository.save(category);
+        return modelMapper.map(savedCtegory, CategoryDTO.class);
+    }
+
 }
