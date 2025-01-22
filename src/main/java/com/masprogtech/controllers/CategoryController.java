@@ -59,4 +59,18 @@ public class CategoryController {
         CategoryDTO deletedCategory = categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(deletedCategory, HttpStatus.OK);
     }
+
+    @Operation(summary = "Actualizar categoria", description = "Actualizar categoria",
+
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "categoria actualizada com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class)))
+            })
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO,
+                                                      @PathVariable Long categoryId){
+        CategoryDTO savedCategoryDTO = categoryService.updateCategory(categoryDTO, categoryId);
+        return new ResponseEntity<>(savedCategoryDTO, HttpStatus.OK);
+
+    }
 }
