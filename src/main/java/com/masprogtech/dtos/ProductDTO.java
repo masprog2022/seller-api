@@ -10,6 +10,7 @@ public class ProductDTO {
     private double price;
     private double discount;
     private double specialPrice;
+    private String categoryName;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
@@ -83,6 +84,14 @@ public class ProductDTO {
 
     public void setSpecialPrice(double specialPrice) {
         this.specialPrice = specialPrice;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public LocalDateTime getCreatedAt() {
