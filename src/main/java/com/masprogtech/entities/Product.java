@@ -22,7 +22,7 @@ public class Product {
     private double discount;
     private double specialPrice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
