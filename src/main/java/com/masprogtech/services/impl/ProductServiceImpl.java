@@ -52,38 +52,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
-                                          String sortBy, String sortOrder,
-                                          String keyword, String category) {
+                                          String sortBy, String sortOrder
+                                          ) {
 
+        // Configura a ordenação
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
+        // Configura os detalhes da paginação
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Specification<Product> spec = Specification.where(null);
-        if (keyword != null && !keyword.isEmpty()){
-            spec = spec.and((root, query, criteriaBuilder)
-                    -> criteriaBuilder.like(root.get("name"), "%" + keyword.toLowerCase() + "%"));
-        }
 
-        if (category != null && !category.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(root.get("category").get("name"), category));
-        }
-       Page<Product> pageProducts = productRepository.findAll(spec, pageDetails);
+        // Recupera todos os produtos sem aplicar filtros
+        Page<Product> pageProducts = productRepository.findAll(pageDetails);
 
-        List<Product> products = pageProducts.getContent();
-
-        List<ProductDTO> productDTOS = products.stream()
+        // Transforma a lista de produtos em DTOs
+        List<ProductDTO> productDTOS = pageProducts.getContent().stream()
                 .map(product -> {
                     ProductDTO dto = modelMapper.map(product, ProductDTO.class);
-                    if (product.getCategory() != null ){
+                    if (product.getCategory() != null) {
                         dto.setCategoryName(product.getCategory().getName());
                     }
                     return dto;
                 })
                 .toList();
 
+        // Preenche a resposta com os dados paginados
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
         productResponse.setPageNumber(pageProducts.getNumber());
@@ -91,6 +85,7 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setTotalElements(pageProducts.getTotalElements());
         productResponse.setTotalPages(pageProducts.getTotalPages());
         productResponse.setLastPage(pageProducts.isLast());
+
         return productResponse;
 
 
