@@ -2,6 +2,7 @@ package com.masprogtech.controllers;
 
 import com.masprogtech.config.AppConstants;
 import com.masprogtech.dtos.ProductDTO;
+import com.masprogtech.payload.MessageResponse;
 import com.masprogtech.payload.ProductResponse;
 import com.masprogtech.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class ProductController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class)))
             })
     @PostMapping("/categories/{categoryId}/product")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO, @PathVariable Long categoryId){
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO, @PathVariable Long categoryId) {
         ProductDTO savedProductDTO = productService.addProduct(categoryId, productDTO);
         return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
     }
@@ -48,9 +49,24 @@ public class ProductController {
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_PRODUCTS_BY, required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder
-    ){
+    ) {
         ProductResponse productResponse = productService.getAllProducts(pageNumber, pageSize,
                 sortBy, sortOrder);
-        return new ResponseEntity<>(productResponse,HttpStatus.OK);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Remover Produto", description = "Remover Produto",
+
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Produto removido com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class)))
+            })
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long productId) {
+        MessageResponse messageResponse = productService.deleteProduct(productId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(messageResponse);
+
     }
 }

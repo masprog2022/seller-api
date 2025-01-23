@@ -5,6 +5,7 @@ import com.masprogtech.entities.Category;
 import com.masprogtech.entities.Product;
 import com.masprogtech.exceptions.APIException;
 import com.masprogtech.exceptions.ResourceNotFoundException;
+import com.masprogtech.payload.MessageResponse;
 import com.masprogtech.payload.ProductResponse;
 import com.masprogtech.repositories.CategoryRepository;
 import com.masprogtech.repositories.ProductRepository;
@@ -89,6 +90,15 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
 
 
+    }
+
+    @Override
+    public MessageResponse deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+        productRepository.delete(product);
+        return new MessageResponse("Product successfully removed", true);
     }
 
     private double calculateSpecialPrice(double price, double discount) {
