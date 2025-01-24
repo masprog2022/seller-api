@@ -1,5 +1,6 @@
 package com.masprogtech.services.impl;
 
+
 import com.masprogtech.dtos.ProductDTO;
 import com.masprogtech.entities.Category;
 import com.masprogtech.entities.Product;
@@ -15,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
             return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
+    @Transactional
     @Override
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
                                           String sortBy, String sortOrder
@@ -92,13 +94,52 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Transactional
     @Override
     public MessageResponse deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
+        Category category = product.getCategory();
+        if (category != null) {
+            category.getProducts().remove(product);
+        }
+
         productRepository.delete(product);
         return new MessageResponse("Product successfully removed", true);
+    }
+
+    @Transactional
+    @Override
+    public ProductDTO updateProduct(Long productId, ProductDTO productDto) {
+
+        Product productFromDb = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        if (productDto.getName() != null) {
+            productFromDb.setName(productDto.getName());
+        }
+        if (productDto.getDescription() != null) {
+            productFromDb.setDescription(productDto.getDescription());
+        }
+        if (productDto.getQuantity() != null) {
+            productFromDb.setQuantity(productDto.getQuantity());
+        }
+        if (productDto.getDiscount() != 0.0) {
+            productFromDb.setDiscount(productDto.getDiscount());
+            productFromDb.setSpecialPrice(calculateSpecialPrice(productFromDb.getPrice(), productDto.getDiscount()));
+        }
+        if (productDto.getPrice() != 0.0) {
+            productFromDb.setPrice(productDto.getPrice());
+            productFromDb.setSpecialPrice(calculateSpecialPrice(productDto.getPrice(), productFromDb.getDiscount()));
+        }
+
+        if (productDto.getCreatedAt() != null) {
+            productFromDb.setCreatedAt(productDto.getCreatedAt());
+        }
+
+        productFromDb.setUpdatedAt(LocalDateTime.now());
+        Product savedProduct = productRepository.save(productFromDb);
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
     private double calculateSpecialPrice(double price, double discount) {

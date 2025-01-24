@@ -1,6 +1,7 @@
 package com.masprogtech.controllers;
 
 import com.masprogtech.config.AppConstants;
+import com.masprogtech.dtos.CategoryDTO;
 import com.masprogtech.dtos.ProductDTO;
 import com.masprogtech.payload.MessageResponse;
 import com.masprogtech.payload.ProductResponse;
@@ -55,18 +56,38 @@ public class ProductController {
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
+    @Operation(summary = "Actualizar Produto", description = "Actualizar Produto",
+
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Produto actualizado com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class)))
+            })
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO,
+                                                    @PathVariable Long productId){
+        ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
+        return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
+    }
+
+
     @Operation(summary = "Remover Produto", description = "Remover Produto",
 
             responses = {
                     @ApiResponse(responseCode = "200", description = "Produto removido com sucesso",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class)))
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)))
             })
     @DeleteMapping("/{productId}")
-    public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long productId) {
+     public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long productId) {
+
+       // productService.deleteProduct(productId);
+       // return ResponseEntity.noContent().build();
+
+
         MessageResponse messageResponse = productService.deleteProduct(productId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(messageResponse);
-
     }
+
+
 }
