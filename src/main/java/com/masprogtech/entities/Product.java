@@ -22,26 +22,25 @@ public class Product {
     private double discount;
     private double specialPrice;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
 
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     public Product() {
     }
 
     public Product(Long id, String name, String description, Integer quantity,
                    double price, double discount, double specialPrice,
-                   Category category, LocalDateTime createdAt, LocalDateTime updateAt) {
+                   Category category, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -51,7 +50,7 @@ public class Product {
         this.specialPrice = specialPrice;
         this.category = category;
         this.createdAt = createdAt;
-        this.updateAt = updateAt;
+        this.updatedAt = updatedAt;
     }
 
 
@@ -127,11 +126,11 @@ public class Product {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updateAt) {
+        this.updatedAt = updateAt;
     }
 }
