@@ -12,13 +12,13 @@ public class ProductDTO {
     private double specialPrice;
     private String categoryName;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     public ProductDTO() {
     }
 
     public ProductDTO(Long id, String name, String description, Integer quantity, double price, double discount,
-                      double specialPrice, LocalDateTime createdAt, LocalDateTime updateAt) {
+                      double specialPrice, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -27,7 +27,7 @@ public class ProductDTO {
         this.discount = discount;
         this.specialPrice = specialPrice;
         this.createdAt = createdAt;
-        this.updateAt = updateAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -102,11 +102,11 @@ public class ProductDTO {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
