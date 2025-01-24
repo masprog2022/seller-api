@@ -8,18 +8,18 @@ public class CategoryDTO {
     private String name;
     private String description;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
 
     public CategoryDTO() {
     }
 
-    public CategoryDTO(Long id, String name,  String description, LocalDateTime createdAt, LocalDateTime updateAt) {
+    public CategoryDTO(Long id, String name,  String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.createdAt = createdAt;
-        this.updateAt = updateAt;
+        this.updatedAt = updatedAt;
     }
 
     public CategoryDTO(String name,  String description) {
@@ -59,11 +59,11 @@ public class CategoryDTO {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
