@@ -79,10 +79,6 @@ public class ProductController {
     @DeleteMapping("/{productId}")
      public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long productId) {
 
-       // productService.deleteProduct(productId);
-       // return ResponseEntity.noContent().build();
-
-
         MessageResponse messageResponse = productService.deleteProduct(productId);
         return ResponseEntity
                 .status(HttpStatus.OK)

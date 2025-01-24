@@ -1,6 +1,7 @@
 package com.masprogtech.controllers;
 
 import com.masprogtech.dtos.CategoryDTO;
+import com.masprogtech.payload.MessageResponse;
 import com.masprogtech.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,12 +53,12 @@ public class CategoryController {
 
             responses = {
                     @ApiResponse(responseCode = "200", description = "categoria deletada com sucesso",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class)))
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)))
             })
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId){
-        CategoryDTO deletedCategory = categoryService.deleteCategory(categoryId);
-        return new ResponseEntity<>(deletedCategory, HttpStatus.OK);
+    public ResponseEntity<MessageResponse> deleteCategory(@PathVariable Long categoryId){
+        MessageResponse messageResponse = categoryService.deleteCategory(categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(messageResponse);
     }
 
     @Operation(summary = "Actualizar categoria", description = "Actualizar categoria",
@@ -69,8 +70,7 @@ public class CategoryController {
     @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO,
                                                       @PathVariable Long categoryId){
-        CategoryDTO savedCategoryDTO = categoryService.updateCategory(categoryDTO, categoryId);
-        return new ResponseEntity<>(savedCategoryDTO, HttpStatus.OK);
-
+      CategoryDTO updateCategoryDTO = categoryService.updateCategory(categoryId, categoryDTO);
+      return new ResponseEntity<>(updateCategoryDTO, HttpStatus.OK);
     }
 }

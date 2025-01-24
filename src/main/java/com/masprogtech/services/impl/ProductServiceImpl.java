@@ -115,6 +115,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
         if (productDto.getName() != null) {
             productFromDb.setName(productDto.getName());
         }
