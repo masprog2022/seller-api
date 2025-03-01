@@ -2,6 +2,10 @@ package com.masprogtech.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
@@ -9,23 +13,27 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_products")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String description;
     private Integer quantity;
     private double price;
     private double discount;
+    private Integer reservedQuantity = 0;
     private double specialPrice;
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
 
 
     @Column(nullable = false, updatable = false)
@@ -35,24 +43,8 @@ public class Product {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    public Product() {
-    }
-
-    public Product(Long id, String name, String description, Integer quantity,
-                   double price, double discount, double specialPrice,
-                   Category category, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.price = price;
-        this.discount = discount;
-        this.specialPrice = specialPrice;
-        this.category = category;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
+    @Column(nullable = false)
+    private Boolean isActive = true;
 
     public Long getId() {
         return id;
@@ -102,6 +94,14 @@ public class Product {
         this.discount = discount;
     }
 
+    public Integer getReservedQuantity() {
+        return reservedQuantity;
+    }
+
+    public void setReservedQuantity(Integer reservedQuantity) {
+        this.reservedQuantity = reservedQuantity;
+    }
+
     public double getSpecialPrice() {
         return specialPrice;
     }
@@ -130,7 +130,30 @@ public class Product {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updateAt) {
-        this.updatedAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.isActive = (this.isActive != null) ? this.isActive : true;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

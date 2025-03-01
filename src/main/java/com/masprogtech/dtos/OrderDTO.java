@@ -1,5 +1,11 @@
 package com.masprogtech.dtos;
 
+import com.masprogtech.enums.PayStatus;
+import com.masprogtech.enums.PaymentMode;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderDTO {
@@ -11,17 +17,26 @@ public class OrderDTO {
     private String address;
     private String status;
 
+    private String payStatus;
+
+    private String paymentMode;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+
     public OrderDTO() {
     }
 
     public OrderDTO(Long orderId, String customer, List<OrderItemDTO> items,
-                    Double totalPrice, String address, String status) {
+                    Double totalPrice, String address, String status, LocalDateTime createdAt, LocalDateTime updatedAt ) {
         this.orderId = orderId;
         this.customer = customer;
         this.items = items;
         this.totalPrice = totalPrice;
         this.address = address;
         this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getOrderId() {
@@ -70,5 +85,38 @@ public class OrderDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -56,9 +56,14 @@ public class CategoryController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class)))
             })
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<MessageResponse> deleteCategory(@PathVariable Long categoryId){
-        MessageResponse messageResponse = categoryService.deleteCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(messageResponse);
+    public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
+        try {
+            categoryService.deleteCategory(categoryId);
+            return ResponseEntity.ok().body(new MessageResponse("Categoria excluída com sucesso", true));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage(), false));
+        }
     }
 
     @Operation(summary = "Actualizar categoria", description = "Actualizar categoria",

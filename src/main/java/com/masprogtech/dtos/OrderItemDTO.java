@@ -3,7 +3,7 @@ package com.masprogtech.dtos;
 public class OrderItemDTO {
     private Long productId;
     private Integer quantity;
-    private Double price; // Opcional, pode ser calculado no backend
+    private Double price;
 
     public OrderItemDTO() {
     }

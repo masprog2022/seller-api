@@ -7,6 +7,9 @@ public class CategoryDTO {
     private Long id;
     private String name;
     private String description;
+    private Boolean isActive;
+
+    private Boolean hasOrders;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -14,10 +17,12 @@ public class CategoryDTO {
     public CategoryDTO() {
     }
 
-    public CategoryDTO(Long id, String name,  String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CategoryDTO(Long id, String name,  String description, Boolean isActive, Boolean hasOrders, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.isActive = isActive;
+        this.hasOrders = hasOrders;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -47,8 +52,24 @@ public class CategoryDTO {
         return description;
     }
 
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getHasOrders() {
+        return hasOrders;
+    }
+
+    public void setHasOrders(Boolean hasOrders) {
+        this.hasOrders = hasOrders;
     }
 
     public LocalDateTime getCreatedAt() {
