@@ -22,7 +22,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    private String Customer;
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private User client;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
@@ -51,10 +53,10 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long orderId, String customer, List<OrderItem> items, Double totalPrice,
+    public Order(Long orderId, User client, List<OrderItem> items, Double totalPrice,
                  OrderStatus status, String address, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.orderId = orderId;
-        Customer = customer;
+        client = client;
         this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
@@ -71,12 +73,13 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public String getCustomer() {
-        return Customer;
+
+    public User getClient() {
+        return client;
     }
 
-    public void setCustomer(String customer) {
-        Customer = customer;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     public List<OrderItem> getItems() {

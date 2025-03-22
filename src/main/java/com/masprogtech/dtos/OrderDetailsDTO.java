@@ -6,10 +6,13 @@ import java.util.List;
 
 public class OrderDetailsDTO {
     private Long orderId;
-    private String customer;
+
+    private String clientName;
+    private Long clientId;
+
+    private String clientTelephone;
     private String address;
     private String status;
-
     private String payStatus;
 
     private String paymentMode;
@@ -27,12 +30,12 @@ public class OrderDetailsDTO {
         this.orderId = orderId;
     }
 
-    public String getCustomer() {
-        return customer;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public String getAddress() {
@@ -89,5 +92,21 @@ public class OrderDetailsDTO {
 
     public void setPaymentMode(String paymentMode) {
         this.paymentMode = paymentMode;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientTelephone() {
+        return clientTelephone;
+    }
+
+    public void setClientTelephone(String clientTelephone) {
+        this.clientTelephone = clientTelephone;
     }
 }

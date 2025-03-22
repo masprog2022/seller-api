@@ -37,4 +37,13 @@ public class OrderItemDTO {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItemDTO{" +
+                "productId=" + productId +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 }

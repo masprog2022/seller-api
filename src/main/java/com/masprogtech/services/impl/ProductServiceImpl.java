@@ -70,47 +70,7 @@ public class ProductServiceImpl implements ProductService {
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
-    @Transactional
-    @Override
-    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
-                                          String sortBy, String sortOrder
-                                          ) {
 
-        // Configura a ordenação
-        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        // Configura os detalhes da paginação
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-
-        // Recupera todos os produtos sem aplicar filtros
-        Page<Product> pageProducts = productRepository.findAll(pageDetails);
-
-        // Transforma a lista de produtos em DTOs
-        List<ProductDTO> productDTOS = pageProducts.getContent().stream()
-                .map(product -> {
-                    ProductDTO dto = modelMapper.map(product, ProductDTO.class);
-                    if (product.getCategory() != null) {
-                        dto.setCategoryName(product.getCategory().getName());
-                    }
-                    return dto;
-                })
-                .toList();
-
-        // Preenche a resposta com os dados paginados
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
-        productResponse.setPageNumber(pageProducts.getNumber());
-        productResponse.setPageSize(pageProducts.getSize());
-        productResponse.setTotalElements(pageProducts.getTotalElements());
-        productResponse.setTotalPages(pageProducts.getTotalPages());
-        productResponse.setLastPage(pageProducts.isLast());
-
-        return productResponse;
-
-
-    }
 
     @Transactional
     @Override

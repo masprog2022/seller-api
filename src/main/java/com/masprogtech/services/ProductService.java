@@ -13,9 +13,6 @@ import java.util.List;
 public interface ProductService {
     ProductDTO addProduct(Long categoryId, ProductDTO productDto);
 
-    ProductResponse getAllProducts(Integer pageNumber, Integer pageSize,
-                                   String sortBy, String sortOrder);
-
     List<ProductDTO> getAllProducts();
 
     MessageResponse deleteProduct(Long productId);

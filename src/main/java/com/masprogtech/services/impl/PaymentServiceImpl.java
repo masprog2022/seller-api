@@ -65,7 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
         requestBody.put("amount", order.getTotalPrice().toString());
         requestBody.put("currency", "aoa");
         requestBody.put("reference_id", order.getOrderId().toString());
-        requestBody.put("customer", order.getCustomer());
+        requestBody.put("customer", order.getClient());
         requestBody.put("success_url", "https://where-to-redirect-in-case-of-success");
         requestBody.put("failure_url", "https://where-to-redirect-in-case-of-failure");
         requestBody.put("callback_url", "https://f2b6-102-213-104-208.ngrok-free.app/payments/payment/confirm");

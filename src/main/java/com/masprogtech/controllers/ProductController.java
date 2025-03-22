@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,9 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @Operation(summary = "Adicionar Produto", description = "Adicionar Produto",
-
+    @Operation(summary = "Adicionar Produto", description = "Adicionar Produto"+
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Produto adicionado com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class)))
@@ -45,25 +47,9 @@ public class ProductController {
         return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Listar todos Produtos", description = "Listar Produtos",
-
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Produto Listados com sucesso",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class)))
-            })
-    @GetMapping("/all")
-    public ResponseEntity<ProductResponse> getAllProducts(
-            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_PRODUCTS_BY, required = false) String sortBy,
-            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder
-    ) {
-        ProductResponse productResponse = productService.getAllProducts(pageNumber, pageSize,
-                sortBy, sortOrder);
-        return new ResponseEntity<>(productResponse, HttpStatus.OK);
-    }
-
-    @Operation(summary = "Actualizar Produto", description = "Actualizar Produto",
+    @Operation(summary = "Actualizar Produto", description = "Actualizar Produto"+
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
 
             responses = {
                     @ApiResponse(responseCode = "200", description = "Produto actualizado com sucesso",
@@ -76,8 +62,9 @@ public class ProductController {
         return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
     }
 
-
-    @Operation(summary = "Remover Produto", description = "Remover Produto",
+    @Operation(summary = "Remover Produto", description = "Remover Produto"+
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
 
             responses = {
                     @ApiResponse(responseCode = "200", description = "Produto removido com sucesso",
@@ -92,10 +79,10 @@ public class ProductController {
                 .body(messageResponse);
     }
 
-    @Operation(summary = "Listar todos pedidos sem paginação", description = "Listar todos pedidos",
+    @Operation(summary = "Listar todos produtos", description = "Listar todos produtos",
 
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Pedidos listado com sucesso",
+                    @ApiResponse(responseCode = "200", description = "produtos listado com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderDTO.class)))
             })
     @GetMapping

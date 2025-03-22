@@ -7,6 +7,7 @@ import com.masprogtech.dtos.OrderItemDetailDTO;
 import com.masprogtech.entities.Order;
 import com.masprogtech.entities.OrderItem;
 import com.masprogtech.entities.Product;
+import com.masprogtech.entities.User;
 import com.masprogtech.enums.OrderStatus;
 import com.masprogtech.enums.PayStatus;
 import com.masprogtech.enums.PaymentMode;
@@ -16,7 +17,6 @@ import com.masprogtech.repositories.OrderRepository;
 import com.masprogtech.repositories.ProductRepository;
 import com.masprogtech.services.OrderService;
 import org.modelmapper.ModelMapper;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,24 +32,27 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
 
+
+
+
     public OrderServiceImpl(ProductRepository productRepository,
                             OrderRepository orderRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
-    }
 
+    }
 
     @Transactional
     @Override
-    public OrderDTO createOrder(OrderDTO orderDto) {
+    public OrderDTO createOrder(OrderDTO orderDto, User client) {
         Order order = new Order();
-        order.setCustomer(orderDto.getCustomer());
+        order.setClient(client); // Usa o User autenticado
         order.setAddress(orderDto.getAddress());
         order.setStatus(OrderStatus.PENDING);
         order.setPayStatus(PayStatus.UNPAID);
         order.setPaymentMode(PaymentMode.valueOf(orderDto.getPaymentMode().toUpperCase()));
-
+        order.setCreatedAt(LocalDateTime.now()); // Adiciona a data de criação
 
         List<OrderItem> items = new ArrayList<>();
         double totalPrice = 0.0;
@@ -79,11 +82,12 @@ public class OrderServiceImpl implements OrderService {
         order.setItems(items);
         order.setTotalPrice(totalPrice);
 
-
         Order savedOrder = orderRepository.save(order);
+
 
         return mapToDto(savedOrder);
     }
+
 
 
     @Transactional
@@ -126,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUpdatedAt(LocalDateTime.now());
         Order updatedOrder = orderRepository.save(order);
 
-        return mapToDto(updatedOrder);
+             return mapToDto(updatedOrder);
     }
 
 
@@ -164,7 +168,9 @@ public class OrderServiceImpl implements OrderService {
 
         OrderDetailsDTO orderDetailsDTO = new OrderDetailsDTO();
         orderDetailsDTO.setOrderId(order.getOrderId());
-        orderDetailsDTO.setCustomer(order.getCustomer());
+        orderDetailsDTO.setClientName(order.getClient().getName()); // Usa o nome do User
+        orderDetailsDTO.setClientId(order.getClient().getUserId());
+        orderDetailsDTO.setClientTelephone(order.getClient().getTelephone());
         orderDetailsDTO.setAddress(order.getAddress());
         orderDetailsDTO.setStatus(order.getStatus().toString());
         orderDetailsDTO.setPayStatus(order.getPayStatus().toString());
@@ -185,25 +191,26 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailsDTO;
     }
 
+    private OrderItemDTO mapToItemDto(OrderItem item) {
+        OrderItemDTO dto = new OrderItemDTO();
+        dto.setProductId(item.getProduct().getId());
+        dto.setQuantity(item.getQuantity());
+        dto.setPrice(item.getPrice());
+        return dto;
+    }
+
     private OrderDTO mapToDto(Order order) {
-
-        OrderDTO orderDto = new OrderDTO();
-        orderDto.setOrderId(order.getOrderId());
-        orderDto.setCustomer(order.getCustomer());
-        orderDto.setAddress(order.getAddress());
-        orderDto.setTotalPrice(order.getTotalPrice());
-        orderDto.setStatus(order.getStatus().name());
-
-        List<OrderItemDTO> itemsDto = order.getItems().stream().map(item -> {
-            OrderItemDTO itemDto = new OrderItemDTO();
-            itemDto.setProductId(item.getProduct().getId());
-            itemDto.setQuantity(item.getQuantity());
-            itemDto.setPrice(item.getPrice());
-            return itemDto;
-        }).collect(Collectors.toList());
-
-        orderDto.setItems(itemsDto);
-
-        return orderDto;
+        OrderDTO dto = new OrderDTO();
+        dto.setOrderId(order.getOrderId());
+        dto.setClientId(order.getClient().getUserId());
+        dto.setItems(order.getItems().stream().map(this::mapToItemDto).collect(Collectors.toList()));
+        dto.setTotalPrice(order.getTotalPrice());
+        dto.setAddress(order.getAddress());
+        dto.setStatus(order.getStatus().name());
+        dto.setPayStatus(order.getPayStatus().name());
+        dto.setPaymentMode(order.getPaymentMode().name());
+        dto.setCreatedAt(order.getCreatedAt());
+        dto.setUpdatedAt(order.getUpdatedAt());
+        return dto;
     }
 }

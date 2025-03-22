@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Transactional
     @Query("UPDATE Product p SET p.isActive = false WHERE p.id = :id")
     void softDelete(@Param("id") Long id);
+
+    long count();
 }
