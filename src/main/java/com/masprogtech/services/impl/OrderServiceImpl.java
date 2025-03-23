@@ -1,18 +1,13 @@
 package com.masprogtech.services.impl;
 
-import com.masprogtech.dtos.OrderDTO;
-import com.masprogtech.dtos.OrderDetailsDTO;
-import com.masprogtech.dtos.OrderItemDTO;
-import com.masprogtech.dtos.OrderItemDetailDTO;
-import com.masprogtech.entities.Order;
-import com.masprogtech.entities.OrderItem;
-import com.masprogtech.entities.Product;
-import com.masprogtech.entities.User;
+import com.masprogtech.dtos.*;
+import com.masprogtech.entities.*;
 import com.masprogtech.enums.OrderStatus;
 import com.masprogtech.enums.PayStatus;
 import com.masprogtech.enums.PaymentMode;
 import com.masprogtech.exceptions.ResourceNotFoundException;
 import com.masprogtech.payload.MessageResponse;
+import com.masprogtech.repositories.AddressRepository;
 import com.masprogtech.repositories.OrderRepository;
 import com.masprogtech.repositories.ProductRepository;
 import com.masprogtech.services.OrderService;
@@ -30,15 +25,16 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+
+    private final AddressRepository addressRepository;
     private final ModelMapper modelMapper;
 
 
-
-
     public OrderServiceImpl(ProductRepository productRepository,
-                            OrderRepository orderRepository, ModelMapper modelMapper) {
+                            OrderRepository orderRepository, AddressRepository addressRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
+        this.addressRepository = addressRepository;
         this.modelMapper = modelMapper;
 
     }
@@ -48,7 +44,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO createOrder(OrderDTO orderDto, User client) {
         Order order = new Order();
         order.setClient(client); // Usa o User autenticado
-        order.setAddress(orderDto.getAddress());
+
+        Address address = addressRepository.findById(orderDto.getAddress().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Address", "id", orderDto.getAddress().getId()));
+        order.setAddress(address);
+
+
         order.setStatus(OrderStatus.PENDING);
         order.setPayStatus(PayStatus.UNPAID);
         order.setPaymentMode(PaymentMode.valueOf(orderDto.getPaymentMode().toUpperCase()));
@@ -87,7 +88,6 @@ public class OrderServiceImpl implements OrderService {
 
         return mapToDto(savedOrder);
     }
-
 
 
     @Transactional
@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUpdatedAt(LocalDateTime.now());
         Order updatedOrder = orderRepository.save(order);
 
-             return mapToDto(updatedOrder);
+        return mapToDto(updatedOrder);
     }
 
 
@@ -141,6 +141,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", orderId));
         return modelMapper.map(order, OrderDTO.class);
     }
+
     @Transactional
     @Override
     public List<OrderDTO> getAllOrders() {
@@ -156,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", orderId));
 
-       orderRepository.delete(order);
+        orderRepository.delete(order);
         return new MessageResponse("Order successfully removed", true);
     }
 
@@ -171,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
         orderDetailsDTO.setClientName(order.getClient().getName()); // Usa o nome do User
         orderDetailsDTO.setClientId(order.getClient().getUserId());
         orderDetailsDTO.setClientTelephone(order.getClient().getTelephone());
-        orderDetailsDTO.setAddress(order.getAddress());
+        orderDetailsDTO.setAddress(mapToAddressDto(order.getAddress()));
         orderDetailsDTO.setStatus(order.getStatus().toString());
         orderDetailsDTO.setPayStatus(order.getPayStatus().toString());
         orderDetailsDTO.setPaymentMode(order.getPaymentMode().toString());
@@ -205,7 +206,7 @@ public class OrderServiceImpl implements OrderService {
         dto.setClientId(order.getClient().getUserId());
         dto.setItems(order.getItems().stream().map(this::mapToItemDto).collect(Collectors.toList()));
         dto.setTotalPrice(order.getTotalPrice());
-        dto.setAddress(order.getAddress());
+        dto.setAddress(mapToAddressDto(order.getAddress()));
         dto.setStatus(order.getStatus().name());
         dto.setPayStatus(order.getPayStatus().name());
         dto.setPaymentMode(order.getPaymentMode().name());
@@ -213,4 +214,17 @@ public class OrderServiceImpl implements OrderService {
         dto.setUpdatedAt(order.getUpdatedAt());
         return dto;
     }
+
+
+    private AddressDTO mapToAddressDto(Address address) {
+        if (address == null) {
+            return null;
+        }
+        return new AddressDTO(
+                address.getId(),
+                address.getAddress(),
+                address.getDescription()
+        );
+    }
+
 }

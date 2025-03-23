@@ -50,8 +50,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/productName/**").permitAll() // Nome público
                         // Pedidos (Cliente)
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/addresses").hasRole("CLIENT")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/{orderId}").hasRole("CLIENT")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/details/{orderId}").hasRole("CLIENT")
+
                         // Pedidos (Admin)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/**").hasRole("ADMIN")

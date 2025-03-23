@@ -11,7 +11,7 @@ public class OrderDetailsDTO {
     private Long clientId;
 
     private String clientTelephone;
-    private String address;
+    private AddressDTO address;
     private String status;
     private String payStatus;
 
@@ -38,11 +38,11 @@ public class OrderDetailsDTO {
         this.clientName = clientName;
     }
 
-    public String getAddress() {
+    public AddressDTO getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(AddressDTO address) {
         this.address = address;
     }
 

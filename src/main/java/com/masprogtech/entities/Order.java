@@ -26,6 +26,10 @@ public class Order {
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
 
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
@@ -41,7 +45,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
 
-    private String address;
 
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -53,14 +56,14 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long orderId, User client, List<OrderItem> items, Double totalPrice,
-                 OrderStatus status, String address, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Long orderId, User client, Address address, List<OrderItem> items, Double totalPrice,
+                 OrderStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.orderId = orderId;
-        client = client;
+        this.client = client;
+        this.address = address;
         this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
-        this.address = address;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -76,6 +79,14 @@ public class Order {
 
     public User getClient() {
         return client;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public void setClient(User client) {
@@ -122,13 +133,6 @@ public class Order {
         this.paymentMode = paymentMode;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

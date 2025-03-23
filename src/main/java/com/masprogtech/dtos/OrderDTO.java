@@ -20,7 +20,7 @@ public class OrderDTO {
 
     private List<OrderItemDTO> items;
     private Double totalPrice;
-    private String address;
+    private AddressDTO address;
     private String status;
 
     private String payStatus;
@@ -40,7 +40,7 @@ public class OrderDTO {
     public OrderDTO() {}
 
     // 🔹 Construtor com todos os campos
-    public OrderDTO(Long orderId, List<OrderItemDTO> items, double totalPrice, String address,
+    public OrderDTO(Long orderId, List<OrderItemDTO> items, double totalPrice, AddressDTO address,
                     String status, String payStatus, Long clientId, String clientName,
                     String clientTelephone, String paymentMode, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.orderId = orderId;
@@ -86,11 +86,11 @@ public class OrderDTO {
         this.totalPrice = totalPrice;
     }
 
-    public String getAddress() {
+    public AddressDTO getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(AddressDTO address) {
         this.address = address;
     }
 
@@ -165,7 +165,7 @@ public class OrderDTO {
                 "orderId=" + orderId +
                 ", items=" + items +
                 ", totalPrice=" + totalPrice +
-                ", address='" + address + '\'' +
+                ", address=" + address +
                 ", status='" + status + '\'' +
                 ", payStatus='" + payStatus + '\'' +
                 ", clientId=" + clientId +
