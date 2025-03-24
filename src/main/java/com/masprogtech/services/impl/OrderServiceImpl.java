@@ -5,6 +5,7 @@ import com.masprogtech.entities.*;
 import com.masprogtech.enums.OrderStatus;
 import com.masprogtech.enums.PayStatus;
 import com.masprogtech.enums.PaymentMode;
+import com.masprogtech.exceptions.InsufficientStockException;
 import com.masprogtech.exceptions.ResourceNotFoundException;
 import com.masprogtech.payload.MessageResponse;
 import com.masprogtech.repositories.AddressRepository;
@@ -63,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "id", itemDto.getProductId()));
 
             if (product.getQuantity() < itemDto.getQuantity()) {
-                throw new IllegalStateException("Product " + product.getName() + " not enough stock.");
+                throw new InsufficientStockException("Produto " + product.getName() + " não tem estoque suficiente.");
             }
 
             product.setQuantity(product.getQuantity() - itemDto.getQuantity());
@@ -204,6 +205,8 @@ public class OrderServiceImpl implements OrderService {
         OrderDTO dto = new OrderDTO();
         dto.setOrderId(order.getOrderId());
         dto.setClientId(order.getClient().getUserId());
+        dto.setClientName(order.getClient().getName());
+        dto.setClientTelephone(order.getClient().getTelephone());
         dto.setItems(order.getItems().stream().map(this::mapToItemDto).collect(Collectors.toList()));
         dto.setTotalPrice(order.getTotalPrice());
         dto.setAddress(mapToAddressDto(order.getAddress()));

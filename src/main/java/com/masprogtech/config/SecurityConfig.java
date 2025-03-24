@@ -51,6 +51,7 @@ public class SecurityConfig {
                         // Pedidos (Cliente)
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders").hasRole("CLIENT")
                         .requestMatchers(HttpMethod.POST, "/api/v1/addresses").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/addresses/list").hasRole("CLIENT")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/{orderId}").hasRole("CLIENT")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/details/{orderId}").hasRole("CLIENT")
 

@@ -20,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/addresses")
 @Tag(name = "Endereço", description = "Endpoints para gerenciar endereço")
@@ -56,4 +58,31 @@ public class AddressController {
         AddressDTO savedAddressDTO = addressService.addAddressToClient(client.getUserId(), addressDTO);
         return new ResponseEntity<>(savedAddressDTO, HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Listar Endereços do Cliente", description = "Lista todos os endereços do cliente autenticado." +
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='CLIENT'",
+            security = @SecurityRequirement(name ="security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista de endereços do cliente",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AddressDTO.class))),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado (não é Client)")
+            })
+    @GetMapping("/list")
+    public ResponseEntity<List<AddressDTO>> getUserAddresses(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+
+        User client = userRepository.findByUsername(userDetails.getUsername());
+
+        if (client == null) {
+            throw new BusinessException("Cliente não encontrado");
+        }
+
+
+        List<AddressDTO> addresses = addressService.getAddressByClient(client.getUserId());
+
+        return ResponseEntity.ok(addresses);
+    }
+
+
 }

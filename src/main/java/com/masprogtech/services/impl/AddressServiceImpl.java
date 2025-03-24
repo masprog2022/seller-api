@@ -9,6 +9,9 @@ import com.masprogtech.repositories.UserRepository;
 import com.masprogtech.services.AddressService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
@@ -34,5 +37,16 @@ public class AddressServiceImpl implements AddressService {
         Address savedAddress = addressRepository.save(address);
 
         return new AddressDTO(savedAddress);
+    }
+
+    @Override
+    public List<AddressDTO> getAddressByClient(Long clientId) {
+
+        List<Address> addresses = addressRepository.findByUserUserId(clientId);
+
+
+        return addresses.stream()
+                .map(address -> new AddressDTO(address.getId(), address.getAddress(), address.getDescription()))
+                .collect(Collectors.toList());
     }
 }
