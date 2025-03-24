@@ -1,6 +1,7 @@
 package com.masprogtech.exceptions;
 
 import com.masprogtech.payload.APIResponse;
+import com.masprogtech.payload.ErrorMessage;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,5 +46,11 @@ public class MyGlobalExceptionHandler {
         errorResponse.put("message", ex.getMessage());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ErrorMessage> handleInsufficientStockException(InsufficientStockException ex) {
+        ErrorMessage errorResponse = new ErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
