@@ -193,6 +193,11 @@ public class OrderServiceImpl implements OrderService {
         return orderDetailsDTO;
     }
 
+    @Override
+    public List<OrderReportDTO> getOrdersByMonth() {
+        return orderRepository.countOrdersByMonth();
+    }
+
     private OrderItemDTO mapToItemDto(OrderItem item) {
         OrderItemDTO dto = new OrderItemDTO();
         dto.setProductId(item.getProduct().getId());

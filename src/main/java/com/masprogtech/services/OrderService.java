@@ -2,6 +2,7 @@ package com.masprogtech.services;
 
 import com.masprogtech.dtos.OrderDTO;
 import com.masprogtech.dtos.OrderDetailsDTO;
+import com.masprogtech.dtos.OrderReportDTO;
 import com.masprogtech.entities.User;
 import com.masprogtech.enums.OrderStatus;
 import com.masprogtech.payload.MessageResponse;
@@ -17,5 +18,7 @@ public interface OrderService {
     MessageResponse deleteOrder(Long productId);
 
     OrderDetailsDTO getOrderDetailsId(Long orderId);
+
+    List<OrderReportDTO> getOrdersByMonth();
 
 }

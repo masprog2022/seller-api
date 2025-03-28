@@ -56,12 +56,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/details/{orderId}").hasRole("CLIENT")
 
                         // Pedidos (Admin)
+
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/admin/orders/{orderId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/admin/details/{orderId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/dashboard/stats").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/dashboard/report").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
