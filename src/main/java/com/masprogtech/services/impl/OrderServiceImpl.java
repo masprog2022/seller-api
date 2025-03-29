@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -198,6 +199,22 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.countOrdersByMonth();
     }
 
+    @Override
+    public List<OrderStatusStatsDTO> getOrderStatsByStatus() {
+        List<Object[]> results = orderRepository.countOrdersByStatus();
+
+        // Converta para o DTO
+        List<OrderStatusStatsDTO> stats = results.stream()
+                .map(obj -> new OrderStatusStatsDTO(
+                        ((OrderStatus) obj[0]).name(),
+                        (long) obj[1]))
+                .collect(Collectors.toList());
+
+        // Garantir que todos os status estejam presentes, mesmo com contagem zero
+        return completeMissingStatuses(stats);
+    }
+
+
     private OrderItemDTO mapToItemDto(OrderItem item) {
         OrderItemDTO dto = new OrderItemDTO();
         dto.setProductId(item.getProduct().getId());
@@ -233,6 +250,23 @@ public class OrderServiceImpl implements OrderService {
                 address.getAddress(),
                 address.getDescription()
         );
+    }
+
+    private List<OrderStatusStatsDTO> completeMissingStatuses(List<OrderStatusStatsDTO> existingStats) {
+        Map<String, Long> statsMap = existingStats.stream()
+                .collect(Collectors.toMap(OrderStatusStatsDTO::getStatus, OrderStatusStatsDTO::getOrders));
+
+        List<OrderStatusStatsDTO> completeStats = new ArrayList<>();
+
+        for (OrderStatus status : OrderStatus.values()) {
+            String statusName = status.name();
+            completeStats.add(new OrderStatusStatsDTO(
+                    statusName,
+                    statsMap.getOrDefault(statusName, 0L))
+            );
+        }
+
+        return completeStats;
     }
 
 }

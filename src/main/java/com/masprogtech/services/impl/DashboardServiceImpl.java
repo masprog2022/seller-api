@@ -7,6 +7,8 @@ import com.masprogtech.repositories.UserRepository;
 import com.masprogtech.services.DashboardService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DashboardServiceImpl implements DashboardService {
     private final OrderRepository orderRepository;
@@ -40,6 +42,7 @@ public class DashboardServiceImpl implements DashboardService {
     public long getProductCount() {
         return productRepository.count();
     }
+
 
     public DashboardStatsDTO getDashboardStats() {
         return new DashboardStatsDTO(getOrderCount(), getCustomerCount(), getTotalSales(), getProductCount());

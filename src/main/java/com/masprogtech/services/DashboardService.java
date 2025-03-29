@@ -2,6 +2,8 @@ package com.masprogtech.services;
 
 import com.masprogtech.dtos.DashboardStatsDTO;
 
+import java.util.List;
+
 public interface DashboardService {
     public long getOrderCount();
     public long getCustomerCount();
@@ -11,4 +13,6 @@ public interface DashboardService {
     public double getTotalSales();
 
     public long getProductCount();
+
+
 }

@@ -3,6 +3,7 @@ package com.masprogtech.controllers;
 
 import com.masprogtech.dtos.DashboardStatsDTO;
 import com.masprogtech.dtos.OrderReportDTO;
+import com.masprogtech.dtos.OrderStatusStatsDTO;
 import com.masprogtech.services.DashboardService;
 import com.masprogtech.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +47,7 @@ public class DashboardController {
         return ResponseEntity.ok(stats);
     }
 
-    @Operation(summary = "Relatório", description = "Relatórios para exibir nos gráficos"+
+    @Operation(summary = "Relatório pedidos por mês (pendentes e entregues)", description = "Relatórios para exibir nos gráficos"+
             "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
             security = @SecurityRequirement(name = "security"),
             responses = {
@@ -58,4 +59,20 @@ public class DashboardController {
     public List<OrderReportDTO> getOrderReport() {
         return orderService.getOrdersByMonth();
     }
+
+    @Operation(summary = "Relatório pedidos por status", description = "Relatórios para exibir nos gráficos"+
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "relatórios exibidos com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderReportDTO.class))),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado (não é Admin)")
+            })
+    @GetMapping("/by-status")
+    public ResponseEntity<List<OrderStatusStatsDTO>> getOrdersByStatus() {
+        List<OrderStatusStatsDTO> stats = orderService.getOrderStatsByStatus();
+        return ResponseEntity.ok(stats);
+    }
+
+
 }
